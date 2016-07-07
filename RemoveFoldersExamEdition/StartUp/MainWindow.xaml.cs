@@ -184,7 +184,7 @@
             }
         }
 
-        private void DirNameTextBox_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
+        private void DirNameTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
         }
     }
