@@ -1,12 +1,12 @@
 # RemoveFolders - ExamEdition
 ##Prep a C# solution for submission on [BGCoder.com](http://bgcoder.com/)
 
-##Removes the following:
-  - ###Folders:
+###Removes the following:
+  - Folders:
     - /obj
     - /bin
     - /.vs
-  - ###Files ( from main folder ):
+  - Files ( from main folder ):
     - .txt
     - .suo
     - .md
