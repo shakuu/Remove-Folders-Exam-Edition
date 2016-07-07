@@ -41,12 +41,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ExtensionsToRemoveListBuilder.cs" />
+    <Compile Include="FileRemover.cs" />
     <Compile Include="FolderPath.cs" />
     <Compile Include="FolderRemover.cs" />
     <Compile Include="FolderZipper.cs" />
     <Compile Include="Contracts\IFolderPath.cs" />
     <Compile Include="Contracts\IFolderRemover.cs" />
     <Compile Include="Contracts\IFolderZipper.cs" />
+    <Compile Include="Contracts\IFileRemover.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -19,6 +19,7 @@
 
         private IFolderZipper zipper;
         private IFolderRemover remover;
+        private IFileRemover fileRemover;
         private IFolderPath folderPath;
 
         public MainWindow()
@@ -32,6 +33,7 @@
             this.folderPath = new FolderPath(DirNameTextBox.Text);
             this.zipper = new FolderZipper();
             this.remover = new FolderRemover();
+            this.fileRemover = new FileRemover();
         }
 
         public string DefaultPath { get; private set; }
@@ -85,6 +87,19 @@
 
             // Delete
             this.Delete();
+
+            // Delete files .suo .txt etc
+            var filesToRemove = new ExtensionsToRemoveListBuilder();
+
+            var removedFiles = this.fileRemover.RemoveFilesWithExtension(
+                 folderPath.TempDirectory,
+                 filesToRemove.ListOfExtensions);
+
+            foreach (var file in removedFiles)
+            {
+                this.DisplayDeletedFolders.Text += Environment.NewLine
+                    + file;
+            }
 
             // Archive
             if (this.zipper.CompressTempFolder(folderPath))
