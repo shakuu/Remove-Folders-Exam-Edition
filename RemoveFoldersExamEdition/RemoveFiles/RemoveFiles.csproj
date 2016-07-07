@@ -32,6 +32,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.IO.Compression.FileSystem" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -40,8 +41,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="FolderPath.cs" />
     <Compile Include="FolderRemover.cs" />
-    <Compile Include="IFolderRemover.cs" />
+    <Compile Include="FolderZipper.cs" />
+    <Compile Include="Contracts\IFolderPath.cs" />
+    <Compile Include="Contracts\IFolderRemover.cs" />
+    <Compile Include="Contracts\IFolderZipper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

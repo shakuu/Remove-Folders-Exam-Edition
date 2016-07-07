@@ -1,14 +1,14 @@
 ﻿namespace StartUp
 {
-    using CompressingFiles;
-    using RemoveFiles;
     using System;
     using System.Collections.Generic;
-    using System.IO;
-    using System.Linq;
+    using System.Collections.ObjectModel;
     using System.Windows;
     using System.Windows.Forms;
     using WinForms = System.Windows.Forms;
+
+    using RemoveFiles;
+    using RemoveFiles.Contracts;
 
     /// <summary>
     /// Interaction logic for MainWindow.xaml
@@ -17,10 +17,9 @@
     {
         private const string InitialDefaultPath = "D:\\GitHub";
 
-        private string pathToDeleteFrom;
-
         private IFolderZipper zipper;
         private IFolderRemover remover;
+        private IFolderPath folderPath;
 
         public MainWindow()
         {
@@ -30,43 +29,12 @@
             this.DefaultPath = InitialDefaultPath;
             DirNameTextBox.Text = this.DefaultPath;
 
-            this.zipper = new FolderZipper(DirNameTextBox.Text);
-            this.remover = new FolderRemover(DirNameTextBox.Text);
+            this.folderPath = new FolderPath(DirNameTextBox.Text);
+            this.zipper = new FolderZipper();
+            this.remover = new FolderRemover();
         }
 
         public string DefaultPath { get; private set; }
-
-        /// <summary>
-        /// Contains Validation of input path
-        /// </summary>
-        public string PathToDeleteFrom
-        {
-            get
-            {
-                return this.pathToDeleteFrom;
-            }
-
-            private set
-            {
-                if (string.IsNullOrEmpty(value))
-                {
-                    throw new Exception("Invalid input (empty).");
-                }
-                else if (!Directory.Exists(value))
-                {
-                    throw new Exception("Unable to find folder.");
-                }
-                else if (value.Where(chr => chr == '\\').Count() == 1
-                         && value.Last() == '\\')
-                {
-                    throw new Exception("Drive root is not a valid folder input.");
-                }
-                else
-                {
-                    this.pathToDeleteFrom = value;
-                }
-            }
-        }
 
         private void FolderBtn_Click(object sender, RoutedEventArgs e)
         {
@@ -90,9 +58,8 @@
         {
             try
             {
-                this.pathToDeleteFrom = DirNameTextBox.Text;
-                this.zipper.PathToCompress = this.pathToDeleteFrom;
-                this.DefaultPath = PathToDeleteFrom;
+                this.folderPath = new FolderPath(DirNameTextBox.Text);
+                this.DefaultPath = folderPath.Directory;
             }
             catch (Exception caught)
             {
@@ -100,18 +67,18 @@
                 return;
             }
 
-            var isSuccessful = zipper.CompressFolder();
+            var isSuccessful = zipper.CompressFolder(folderPath);
 
             if (isSuccessful)
             {
-                DisplayDeletedFolders.Text = string.Format("Successfully archived{1}Output file: {0}",
-                    /*DirNameTextBox.Text + ".zip"*/
-                    zipper.ZippedPath,
-                    Environment.NewLine);
+                DisplayDeletedFolders.Text += Environment.NewLine +
+                    string.Format("Successfully archived{1}Output file: {0}",
+                        folderPath.ArchiveDirectory,
+                        Environment.NewLine);
             }
 
             // Extract to temp
-            this.zipper.ExtractToTempFolder();
+            this.zipper.ExtractToTempFolder(folderPath);
 
             // Search in temp
             this.Search();
@@ -120,32 +87,31 @@
             this.Delete();
 
             // Archive
-            this.zipper.CompressTempFolder();
+            if (this.zipper.CompressTempFolder(folderPath))
+            {
+                DisplayDeletedFolders.Text += Environment.NewLine +
+                   string.Format("Successfully archived{1}Output file: {0}",
+                       folderPath.ArchiveDirectory,
+                       Environment.NewLine);
+            }
+
             // Remove temp
-            this.zipper.DeleteTempFolder();
+            this.zipper.DeleteTempFolder(folderPath);
         }
 
         private void Search()
         {
-            try
-            {
-                this.remover.Path = this.zipper.TempPath;
-            }
-            catch (Exception caught)
-            {
-                DisplayDeletedFolders.Text = caught.Message;
-                return;
-            }
-
+            this.remover.FindFolders(folderPath);
 
             if (this.remover.DirectoriesFound.Count > 0)
             {
-                DisplayDeletedFolders.Text =
+                DisplayDeletedFolders.Text += Environment.NewLine +
                     string.Join(Environment.NewLine, this.remover.DirectoriesFound);
             }
             else
             {
-                DisplayDeletedFolders.Text = "No Obj or Bin folders found.";
+                DisplayDeletedFolders.Text += Environment.NewLine +
+                    "No Obj or Bin folders found.";
             }
         }
 
@@ -153,36 +119,40 @@
         {
             var userInput = WinForms.MessageBox
                 .Show(string.Format("Are you sure sure you want to delete all /obj and /bin folders in {0}?",
-                this.PathToDeleteFrom),
+                folderPath.Directory),
                 "Confirm", MessageBoxButtons.OKCancel);
 
             if (userInput == WinForms.DialogResult.OK)
             {
-                ICollection<string> result = new List<string>();
+                ICollection<string> result = new Collection<string>();
 
                 try
                 {
-                    result = this.remover.RemoveFolders();
+                    result = this.remover.RemoveFolders(remover.DirectoriesFound);
                 }
                 catch (Exception)
                 {
-                    DisplayDeletedFolders.Text = "Unable to delete all files/";
+                    DisplayDeletedFolders.Text += Environment.NewLine +
+                        "Unable to delete all files/";
                 }
 
 
                 if (result.Count == 0)
                 {
-                    DisplayDeletedFolders.Text = "Operation Complete.";
+                    DisplayDeletedFolders.Text += Environment.NewLine +
+                        "Operation Complete.";
                 }
                 else
                 {
-                    DisplayDeletedFolders.Text = "Unable to delete: " + Environment.NewLine +
+                    DisplayDeletedFolders.Text += Environment.NewLine +
+                        "Unable to delete: " + Environment.NewLine +
                         string.Join(Environment.NewLine, result);
                 }
             }
             else
             {
-                DirNameTextBox.Text = "Operation canceled.";
+                DirNameTextBox.Text += Environment.NewLine +
+                    "Operation canceled.";
             }
         }
 

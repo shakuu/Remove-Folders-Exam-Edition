@@ -6,39 +6,14 @@ namespace RemoveFiles
     using System.IO;
     using System.Linq;
 
+    using Contracts;
+
     public class FolderRemover : IFolderRemover
     {
         private const string BinDirectory = "bin";
         private const string ObjDirectory = "obj";
 
-        private ICollection<string> dirsFound;
-
-        private string path;
-
-        public FolderRemover(string path)
-        {
-            this.dirsFound = new LinkedList<string>();
-
-            this.Path = path;
-        }
-
-        /// <summary>
-        /// Searches for folders to delete on each update
-        /// </summary>
-        public string Path
-        {
-            get
-            {
-                return this.path;
-            }
-
-            set
-            {
-                this.path = value;
-
-                this.FindFolders();
-            }
-        }
+        private ICollection<string> dirsFound = new List<string>();
 
         public ICollection<string> DirectoriesFound
         {
@@ -48,11 +23,11 @@ namespace RemoveFiles
             }
         }
 
-        private ICollection<string> FindFolders()
+        public ICollection<string> FindFolders(IFolderPath folderPath)
         {
             this.ClearList();
 
-            var output = this.FindObjBinDirectories(this.Path);
+            var output = this.FindObjBinDirectories(folderPath.TempDirectory);
 
             return output;
         }
@@ -81,11 +56,11 @@ namespace RemoveFiles
             return dirsFound;
         }
 
-        public ICollection<string> RemoveFolders()
+        public ICollection<string> RemoveFolders(IEnumerable<string> foldersToRemove)
         {
             var foldersNotFound = new List<string>();
 
-            foreach (var folder in this.DirectoriesFound)
+            foreach (var folder in foldersToRemove)
             {
                 if (Directory.Exists(folder))
                 {
