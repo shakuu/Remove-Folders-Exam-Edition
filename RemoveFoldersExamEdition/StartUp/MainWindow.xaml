@@ -54,7 +54,7 @@
                  />
         
         <Label x:Name="label" 
-               Content="Instructions: Select Path. Click Archive. Good Luck!"
+               Content="Instructions: Remove any non-english letters from path name. Good Luck!"
                FontFamily="consolas"
                FontSize="14"
                HorizontalAlignment="Left" 

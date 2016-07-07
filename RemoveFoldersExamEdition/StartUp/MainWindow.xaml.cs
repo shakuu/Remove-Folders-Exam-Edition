@@ -92,6 +92,7 @@
             {
                 this.pathToDeleteFrom = DirNameTextBox.Text;
                 this.zipper.PathToCompress = this.pathToDeleteFrom;
+                this.DefaultPath = PathToDeleteFrom;
             }
             catch (Exception caught)
             {
