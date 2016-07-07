@@ -5,6 +5,7 @@
     using System.Collections.ObjectModel;
     using System.Windows;
     using System.Windows.Forms;
+    using System.Windows.Controls;
     using WinForms = System.Windows.Forms;
 
     using RemoveFiles;
@@ -95,11 +96,8 @@
                  folderPath.TempDirectory,
                  filesToRemove.ListOfExtensions);
 
-            foreach (var file in removedFiles)
-            {
-                this.DisplayDeletedFolders.Text += Environment.NewLine
-                    + file;
-            }
+            this.DisplayOnTextBlock(DisplayDeletedFolders, removedFiles,
+                 "Operation: Delete unnecessary files - complete");
 
             // Archive
             if (this.zipper.CompressTempFolder(folderPath))
@@ -112,6 +110,21 @@
 
             // Remove temp
             this.zipper.DeleteTempFolder(folderPath);
+        }
+
+        private void DisplayOnTextBlock(TextBlock textBlock, IEnumerable<string> linesOfText, string successMessage = null)
+        {
+            foreach (var line in linesOfText)
+            {
+                textBlock.Text += Environment.NewLine
+                    + line;
+            }
+
+            if (!string.IsNullOrEmpty(successMessage))
+            {
+                textBlock.Text += Environment.NewLine
+                    + successMessage;
+            }
         }
 
         private void Search()
@@ -155,7 +168,7 @@
                 if (result.Count == 0)
                 {
                     DisplayDeletedFolders.Text += Environment.NewLine +
-                        "Operation Complete.";
+                        "Operation: Delete Obj/ Bin folders - complete.";
                 }
                 else
                 {
