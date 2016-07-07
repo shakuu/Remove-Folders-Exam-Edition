@@ -5,6 +5,6 @@ namespace RemoveFiles.Contracts
 
     public interface IFileRemover
     {
-        IEnumerable<string> RemoveFilesWithExtension(string path, IEnumerable<string> extensions);
+        IEnumerable<string> RemoveFilesWithExtension(string path, ICollection<string> extensions);
     }
 }

@@ -3,16 +3,16 @@ namespace RemoveFiles
 {
     using System.Collections.Generic;
 
-    public class ExtensionsToRemoveListBuilder
+    public class FilesToRemoveListProvider : IListToRemove
     {
         private HashSet<string> extensions;
 
-        public ExtensionsToRemoveListBuilder()
+        public FilesToRemoveListProvider()
         {
             this.BuildDefaultList();
         }
 
-        public IEnumerable<string> ListOfExtensions
+        public ICollection<string> ListOfExtensions
         {
             get
             {

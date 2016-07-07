@@ -50,6 +50,7 @@
     <Compile Include="Contracts\IFolderRemover.cs" />
     <Compile Include="Contracts\IFolderZipper.cs" />
     <Compile Include="Contracts\IFileRemover.cs" />
+    <Compile Include="IListToRemove.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

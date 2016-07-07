@@ -9,10 +9,9 @@ namespace RemoveFiles
 
     public class FileRemover : IFileRemover
     {
-        public IEnumerable<string> RemoveFilesWithExtension(string path, IEnumerable<string> extensions)
+        public IEnumerable<string> RemoveFilesWithExtension(string path, ICollection<string> extensions)
         {
             var listOfDeletedFiles = new LinkedList<string>();
-
             var filesInCurrentDirectory = Directory.GetFiles(path);
 
             foreach (var file in filesInCurrentDirectory)

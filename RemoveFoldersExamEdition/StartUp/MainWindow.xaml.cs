@@ -92,7 +92,7 @@
             this.Delete();
 
             // Delete files .suo .txt etc
-            var filesToRemove = new ExtensionsToRemoveListBuilder();
+            var filesToRemove = new FilesToRemoveListProvider();
 
             var removedFiles = this.fileRemover.RemoveFilesWithExtension(
                  folderPath.TempDirectory,
