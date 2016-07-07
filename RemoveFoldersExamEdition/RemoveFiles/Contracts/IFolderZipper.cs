@@ -2,12 +2,10 @@
 {
     public interface IFolderZipper
     {
-        bool CompressFolder(IFolderPath folderPath);
+        bool CompressFolder(string folderToCompress, string archiveLocation);
+        
+        bool DeleteTempFolder(string tempDirectory);
 
-        bool CompressTempFolder(IFolderPath folderPath);
-
-        bool DeleteTempFolder(IFolderPath folderPath);
-
-        bool ExtractToTempFolder(IFolderPath folderPath);
+        bool ExtractToTempFolder(string tempDirectory, string archiveLocation);
     }
 }

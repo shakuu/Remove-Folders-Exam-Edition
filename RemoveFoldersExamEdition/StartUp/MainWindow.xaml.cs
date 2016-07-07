@@ -59,6 +59,8 @@
 
         private void ArchiveBtn_Click(object sender, RoutedEventArgs e)
         {
+            this.DisplayDeletedFolders.Text = string.Empty;
+
             try
             {
                 this.folderPath = new FolderPath(DirNameTextBox.Text);
@@ -70,7 +72,7 @@
                 return;
             }
 
-            var isSuccessful = zipper.CompressFolder(folderPath);
+            var isSuccessful = zipper.CompressFolder(folderPath.Directory, folderPath.ArchiveDirectory);
 
             if (isSuccessful)
             {
@@ -81,7 +83,7 @@
             }
 
             // Extract to temp
-            this.zipper.ExtractToTempFolder(folderPath);
+            this.zipper.ExtractToTempFolder(folderPath.TempDirectory, folderPath.ArchiveDirectory);
 
             // Search in temp
             this.Search();
@@ -100,7 +102,7 @@
                  "Operation: Delete unnecessary files - complete");
 
             // Archive
-            if (this.zipper.CompressTempFolder(folderPath))
+            if (this.zipper.CompressFolder(folderPath.TempDirectory, folderPath.ArchiveDirectory))
             {
                 DisplayDeletedFolders.Text += Environment.NewLine +
                    string.Format("Successfully archived{1}Output file: {0}",
@@ -109,7 +111,7 @@
             }
 
             // Remove temp
-            this.zipper.DeleteTempFolder(folderPath);
+            this.zipper.DeleteTempFolder(folderPath.TempDirectory);
         }
 
         private void DisplayOnTextBlock(TextBlock textBlock, IEnumerable<string> linesOfText, string successMessage = null)

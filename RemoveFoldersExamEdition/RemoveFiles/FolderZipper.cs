@@ -9,15 +9,15 @@ namespace RemoveFiles
     
     public class FolderZipper : IFolderZipper
     {
-        public bool CompressFolder(IFolderPath folderPath)
+        public bool CompressFolder(string folderToCompress, string archiveLocation)
         {
-            this.RemoveExistingArchive(folderPath);
+            this.RemoveExistingArchive(archiveLocation);
             
             try
             {
                 ZipFile.CreateFromDirectory(
-                    folderPath.Directory, 
-                    folderPath.ArchiveDirectory);
+                    folderToCompress, 
+                    archiveLocation);
                 return true;
             }
             catch (Exception)
@@ -25,62 +25,45 @@ namespace RemoveFiles
                 return false;
             }
         }
-
-        public bool CompressTempFolder(IFolderPath folderPath)
+        
+        public bool ExtractToTempFolder(string tempDirectory, string archiveLocation)
         {
-            this.RemoveExistingArchive(folderPath);
-
-            try
+            if (archiveLocation == null || !File.Exists(archiveLocation))
             {
-                ZipFile.CreateFromDirectory(
-                    folderPath.TempDirectory,
-                    folderPath.ArchiveDirectory);
-                return true;
-            }
-            catch (Exception)
-            {
-                return false;
-            }
-        }
-
-        public bool ExtractToTempFolder(IFolderPath folderPath)
-        {
-            if (folderPath.ArchiveDirectory == null || !File.Exists(folderPath.ArchiveDirectory))
-            {
-                throw new FileNotFoundException($"{folderPath.ArchiveDirectory} not found");
+                throw new FileNotFoundException($"{archiveLocation} not found");
             }
 
-            if (Directory.Exists(folderPath.TempDirectory))
+            if (Directory.Exists(tempDirectory))
             {
-                Directory.Delete(folderPath.TempDirectory, true);
+                Directory.Delete(tempDirectory, true);
             }
 
-            if (!Directory.Exists(folderPath.TempDirectory))
+            if (!Directory.Exists(tempDirectory))
             {
-                Directory.CreateDirectory(folderPath.TempDirectory);
+                Directory.CreateDirectory(tempDirectory);
             }
 
-            ZipFile.ExtractToDirectory(folderPath.ArchiveDirectory, folderPath.TempDirectory);
+            ZipFile.ExtractToDirectory(archiveLocation, tempDirectory);
 
             return true;
         }
 
-        public bool DeleteTempFolder(IFolderPath folderPath)
+        public bool DeleteTempFolder(string tempDirectory)
         {
-            if (Directory.Exists(folderPath.TempDirectory))
+            if (Directory.Exists(tempDirectory))
             {
-                Directory.Delete(folderPath.TempDirectory, true);
+                Directory.Delete(tempDirectory, true);
                 return true;
             }
 
             return false;
         }
 
-        private void RemoveExistingArchive(IFolderPath folderPath)
+        private void RemoveExistingArchive(string archiveLocation)
         {
-            if (File.Exists(folderPath.ArchiveDirectory))
+            if (File.Exists(archiveLocation))
             {
-                File.Delete(folderPath.ArchiveDirectory);
+                File.Delete(archiveLocation);
             }
         }
     }
