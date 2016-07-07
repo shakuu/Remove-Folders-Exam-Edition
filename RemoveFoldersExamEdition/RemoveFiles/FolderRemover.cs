@@ -12,6 +12,7 @@ namespace RemoveFiles
     {
         private const string BinDirectory = "bin";
         private const string ObjDirectory = "obj";
+        private const string DotVSDirectory = ".vs";
 
         private ICollection<string> dirsFound = new List<string>();
 
@@ -91,7 +92,9 @@ namespace RemoveFiles
                     StringSplitOptions.RemoveEmptyEntries)
                 .LastOrDefault();
 
-            return (folders == FolderRemover.BinDirectory || folders == FolderRemover.ObjDirectory);
+            return (folders == FolderRemover.BinDirectory 
+                || folders == FolderRemover.ObjDirectory
+                || folders == FolderRemover.DotVSDirectory);
         }
 
         private bool ClearList()
