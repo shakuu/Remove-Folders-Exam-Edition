@@ -119,15 +119,5 @@ namespace CompressingFiles
 
             return false;
         }
-
-        private bool CheckIfFileExists(string path)
-        {
-            return File.Exists(path);
-        }
-
-        private bool CheckIFFolderExists(string path)
-        {
-            return Directory.Exists(path);
-        }
     }
 }

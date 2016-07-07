@@ -21,7 +21,10 @@ namespace RemoveFiles
 
             this.Path = path;
         }
-        
+
+        /// <summary>
+        /// Searches for folders to delete on each update
+        /// </summary>
         public string Path
         {
             get
@@ -128,6 +131,5 @@ namespace RemoveFiles
                 return false;
             }
         }
-
     }
 }
