@@ -14,6 +14,7 @@
         private const string DotVSDirectory = ".vs";
 
         private ICollection<string> dirsFound = new List<string>();
+        private ICollection<string> listOfFolderNamesToMatch;
 
         public ICollection<string> ItemsFound
         {
@@ -25,16 +26,18 @@
 
         public ICollection<string> FindItems(string path, ICollection<string> searchForItemsContaining)
         {
+            this.listOfFolderNamesToMatch = searchForItemsContaining;
+
             this.ClearList();
 
-            var output = this.FindObjBinDirectories(path, new LinkedList<string>());
+            var output = this.FindObjBinDirectories(path);
 
-            output.Add($"Number of folders found: {output.Count}");
+            this.listOfFolderNamesToMatch = null;
 
             return output;
         }
 
-        private ICollection<string> FindObjBinDirectories(string path, ICollection<string> searchForItemsContaining)
+        private ICollection<string> FindObjBinDirectories(string path)
         {
             var dirs = Directory.GetDirectories(path);
 
@@ -51,7 +54,7 @@
                 }
                 else
                 {
-                    FindObjBinDirectories(dir, searchForItemsContaining);
+                    FindObjBinDirectories(dir);
                 }
             }
 
@@ -85,17 +88,16 @@
             return foldersNotFound;
         }
 
-        private static bool CheckDir(string path)
+        private bool CheckDir(string path)
         {
-            var folders = path
+            var folder = path
                 .Split(
                     new[] { '\\' },
                     StringSplitOptions.RemoveEmptyEntries)
                 .LastOrDefault();
 
-            var result = (folders == FolderRemover.BinDirectory
-                    || folders == FolderRemover.ObjDirectory
-                    || folders == FolderRemover.DotVSDirectory);
+            var result = 
+                this.listOfFolderNamesToMatch.Contains(folder);
 
             return result;
         }

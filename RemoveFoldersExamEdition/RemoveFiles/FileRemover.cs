@@ -21,6 +21,11 @@
 
         public ICollection<string> FindItems(string path, ICollection<string> searchForItemsContaining)
         {
+            this.ClearList();
+
+            searchForItemsContaining = 
+                RemoveDotsFromListOfItemsToRemove(searchForItemsContaining);
+
             this.CheckIfPathIsValid(path);
 
             var filesInCurrentDirectory = Directory.GetFiles(path);
@@ -40,10 +45,20 @@
                     }
                 }
             }
-
-            this.filesFound.Add($"Number of files found: {this.filesFound.Count}");
-
+            
             return this.ItemsFound;
+        }
+
+        private ICollection<string> RemoveDotsFromListOfItemsToRemove(IEnumerable<string> inputItems)
+        {
+            ICollection<string> output = new HashSet<string>();
+
+            foreach (var item in inputItems)
+            {
+                output.Add(item.Replace(".", ""));
+            }
+
+            return output;
         }
 
         public ICollection<string> RemoveItems(IEnumerable<string> itemsToRemove)
@@ -78,6 +93,19 @@
             if (!Directory.Exists(path))
             {
                 throw new DirectoryNotFoundException($"{path} not found");
+            }
+        }
+
+        private bool ClearList()
+        {
+            try
+            {
+                filesFound.Clear();
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
             }
         }
     }

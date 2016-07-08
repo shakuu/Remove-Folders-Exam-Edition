@@ -18,6 +18,9 @@
     {
         private const string InitialDefaultPath = "D:\\GitHub";
 
+        private const string FileExtentionsListFilePath = "./settings/file.settings.removefolders";
+        private const string FolderExtentionsListFilePath = "./settings/folder.settings.removefolders";
+
         private IFolderZipper zipper;
         private IRemover folderRemover;
         private IRemover fileRemover;
@@ -77,11 +80,12 @@
             this.zipper.ExtractToTempFolder(folderPath.TempDirectory, folderPath.ArchiveDirectory);
 
             // Search and Destray Folders.
-            this.Search(this.folderRemover.FindItems, folderPath.TempDirectory, new List<string>());
+            var foldersToRemove = new ToRemoveListProvider(MainWindow.FolderExtentionsListFilePath);
+            this.Search(this.folderRemover.FindItems, folderPath.TempDirectory, foldersToRemove.ListToRemove);
             this.Delete(this.folderRemover.RemoveItems, this.folderRemover.ItemsFound);
 
             // Search and Destroy Files.
-            var filesToRemove = new ToRemoveListProvider();
+            var filesToRemove = new ToRemoveListProvider(MainWindow.FileExtentionsListFilePath);
             Search(this.fileRemover.FindItems, folderPath.TempDirectory, filesToRemove.ListToRemove);
             Delete(this.fileRemover.RemoveItems, this.fileRemover.ItemsFound);
 
@@ -142,8 +146,11 @@
         {
             var searchResult = searchMethod.Invoke(path, searchParams);
 
-            DisplayDeletedFolders.Text += Environment.NewLine +
-                string.Join(Environment.NewLine, searchResult);
+            if (searchResult.Count > 0)
+            {
+                DisplayDeletedFolders.Text += Environment.NewLine +
+                    string.Join(Environment.NewLine, searchResult);
+            }
         }
 
         private void Delete(Func<IEnumerable<string>, ICollection<string>> deleteMethod, IEnumerable<string> inputParams)

@@ -42,7 +42,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Contracts\IRemover.cs" />
-    <Compile Include="ExtensionsToRemoveListBuilder.cs" />
+    <Compile Include="Settings\FileReader.cs" />
+    <Compile Include="Settings\IFileReader.cs" />
+    <Compile Include="ToRemoveListBuilder.cs" />
     <Compile Include="FileRemover.cs" />
     <Compile Include="FolderPath.cs" />
     <Compile Include="FolderRemover.cs" />
