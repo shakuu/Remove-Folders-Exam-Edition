@@ -48,9 +48,7 @@
     <Compile Include="FolderRemover.cs" />
     <Compile Include="FolderZipper.cs" />
     <Compile Include="Contracts\IFolderPath.cs" />
-    <Compile Include="Contracts\IFolderRemover.cs" />
     <Compile Include="Contracts\IFolderZipper.cs" />
-    <Compile Include="Contracts\IFileRemover.cs" />
     <Compile Include="Contracts\IListToRemove.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
