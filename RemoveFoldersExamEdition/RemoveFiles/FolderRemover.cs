@@ -7,7 +7,7 @@
 
     using Contracts;
 
-    public class FolderRemover : IFolderRemover
+    public class FolderRemover : IRemover
     {
         private const string BinDirectory = "bin";
         private const string ObjDirectory = "obj";
@@ -15,7 +15,7 @@
 
         private ICollection<string> dirsFound = new List<string>();
 
-        public ICollection<string> DirectoriesFound
+        public ICollection<string> ItemsFound
         {
             get
             {
@@ -23,16 +23,16 @@
             }
         }
 
-        public ICollection<string> FindFolders(IFolderPath folderPath)
+        public ICollection<string> FindItems(string path, ICollection<string> searchForItemsContaining)
         {
             this.ClearList();
 
-            var output = this.FindObjBinDirectories(folderPath.TempDirectory);
+            var output = this.FindObjBinDirectories(path, new LinkedList<string>());
 
             return output;
         }
 
-        private ICollection<string> FindObjBinDirectories(string path)
+        private ICollection<string> FindObjBinDirectories(string path, ICollection<string> searchForItemsContaining)
         {
             var dirs = Directory.GetDirectories(path);
 
@@ -49,18 +49,18 @@
                 }
                 else
                 {
-                    FindObjBinDirectories(dir);
+                    FindObjBinDirectories(dir, searchForItemsContaining);
                 }
             }
 
             return dirsFound;
         }
 
-        public ICollection<string> RemoveFolders(IEnumerable<string> foldersToRemove)
+        public ICollection<string> RemoveItems(IEnumerable<string> itemsToRemove)
         {
             var foldersNotFound = new List<string>();
 
-            foreach (var folder in foldersToRemove)
+            foreach (var folder in itemsToRemove)
             {
                 if (Directory.Exists(folder))
                 {
@@ -91,9 +91,11 @@
                     StringSplitOptions.RemoveEmptyEntries)
                 .LastOrDefault();
 
-            return (folders == FolderRemover.BinDirectory 
-                || folders == FolderRemover.ObjDirectory
-                || folders == FolderRemover.DotVSDirectory);
+            var result = (folders == FolderRemover.BinDirectory
+                    || folders == FolderRemover.ObjDirectory
+                    || folders == FolderRemover.DotVSDirectory);
+
+            return result;
         }
 
         private bool ClearList()

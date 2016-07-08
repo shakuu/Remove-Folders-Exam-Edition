@@ -19,8 +19,8 @@
         private const string InitialDefaultPath = "D:\\GitHub";
 
         private IFolderZipper zipper;
-        private IFolderRemover remover;
-        private IFileRemover fileRemover;
+        private IRemover remover;
+        private IRemover fileRemover;
         private IFolderPath folderPath;
 
         public MainWindow()
@@ -86,21 +86,17 @@
             this.zipper.ExtractToTempFolder(folderPath.TempDirectory, folderPath.ArchiveDirectory);
 
             // Search in temp
-            this.Search();
+            this.Search(this.remover.FindItems, folderPath.TempDirectory, new List<string>());
 
             // Delete
-            this.Delete();
+            this.Delete(this.remover.RemoveItems, this.remover.ItemsFound);
 
             // Delete files .suo .txt etc
             var filesToRemove = new ToRemoveListProvider();
 
-            var removedFiles = this.fileRemover.RemoveFilesWithExtension(
-                 folderPath.TempDirectory,
-                 filesToRemove.ListToRemove);
-
-            this.DisplayOnTextBlock(DisplayDeletedFolders, removedFiles,
-                 "Operation: Delete unnecessary files - complete");
-
+            Search(this.fileRemover.FindItems, folderPath.TempDirectory, filesToRemove.ListToRemove);
+            Delete(this.fileRemover.RemoveItems, this.fileRemover.ItemsFound);
+            
             // Archive
             if (this.zipper.CompressFolder(folderPath.TempDirectory, folderPath.ArchiveDirectory))
             {
@@ -129,14 +125,14 @@
             }
         }
 
-        private void Search()
+        private void Search(Func<string, ICollection<string>, ICollection<string>> searchMethod, string path, ICollection<string> searchParams)
         {
-            this.remover.FindFolders(folderPath);
+            var searchResult = searchMethod.Invoke(path, searchParams);
 
-            if (this.remover.DirectoriesFound.Count > 0)
+            if (searchResult.Count > 0)
             {
                 DisplayDeletedFolders.Text += Environment.NewLine +
-                    string.Join(Environment.NewLine, this.remover.DirectoriesFound);
+                    string.Join(Environment.NewLine, searchResult);
             }
             else
             {
@@ -145,12 +141,12 @@
             }
         }
 
-        private void Delete()
+        private void Delete(Func<IEnumerable<string>, ICollection<string>> deleteMethod, IEnumerable<string> inputParams)
         {
             var userInput = WinForms.MessageBox
-                .Show(string.Format("Are you sure sure you want to delete all /obj and /bin folders in {0}?",
+                .Show(string.Format("Are you sure sure you want to delete all unnecessary folders and files in {0}?",
                 folderPath.Directory),
-                "Confirm", MessageBoxButtons.OKCancel);
+                "Confirm deletion", MessageBoxButtons.OKCancel);
 
             if (userInput == WinForms.DialogResult.OK)
             {
@@ -158,7 +154,7 @@
 
                 try
                 {
-                    result = this.remover.RemoveFolders(remover.DirectoriesFound);
+                    result = deleteMethod.Invoke(inputParams);
                 }
                 catch (Exception)
                 {

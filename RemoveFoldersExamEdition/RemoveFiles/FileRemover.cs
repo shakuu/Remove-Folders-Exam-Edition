@@ -1,14 +1,25 @@
 ﻿namespace RemoveFolders.Utilities
 {
+    using System;
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
 
     using Contracts;
 
-    public class FileRemover : IFileRemover
+    public class FileRemover : IRemover
     {
-        public IEnumerable<string> RemoveFilesWithExtension(string path, ICollection<string> extensions)
+        private ICollection<string> filesFound = new LinkedList<string>();
+
+        public ICollection<string> ItemsFound
+        {
+            get
+            {
+                return new List<string>(this.filesFound);
+            }
+        }
+
+        public ICollection<string> FindItems(string path, ICollection<string> searchForItemsContaining)
         {
             this.CheckIfPathIsValid(path);
 
@@ -24,15 +35,42 @@
 
                 if (filenameExtension != null)
                 {
-                    if (extensions.Contains(filenameExtension))
+                    if (searchForItemsContaining.Contains(filenameExtension))
                     {
-                        listOfDeletedFiles.AddLast(file);
-                        File.Delete(file);
+                        this.filesFound.Add(file);
+                        //File.Delete(file);
                     }
                 }
             }
 
-            return listOfDeletedFiles;
+            return this.ItemsFound;
+        }
+
+        public ICollection<string> RemoveItems(IEnumerable<string> itemsToRemove)
+        {
+            var filesNotFound = new List<string>();
+
+            foreach (var file in itemsToRemove)
+            {
+                if (File.Exists(file))
+                {
+                    try
+                    {
+                        File.Delete(file);
+                    }
+                    catch (Exception)
+                    {
+
+                        filesNotFound.Add(file);
+                    }
+                }
+                else
+                {
+                    filesNotFound.Add(file);
+                }
+            }
+
+            return filesNotFound;
         }
 
         private void CheckIfPathIsValid(string path)
