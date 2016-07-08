@@ -61,16 +61,9 @@
         {
             this.DisplayDeletedFolders.Text = string.Empty;
 
-            try
-            {
-                this.folderPath = GetCurrentFolderPath(this.DirNameTextBox);
-            }
-            catch (Exception)
-            {
-                return;
-            }
+            this.folderPath = GetCurrentFolderPath(this.DirNameTextBox);
 
-            var isSuccessful = this.zipper.CompressFolder(folderPath.Directory, folderPath.ArchiveDirectory);
+            var isSuccessful = zipper.CompressFolder(folderPath.Directory, folderPath.ArchiveDirectory);
             DisplayZipperCompressOutcomeMessage(isSuccessful);
 
             // Extract to temp
@@ -86,7 +79,7 @@
             Delete(this.fileRemover.RemoveItems, this.fileRemover.ItemsFound);
 
             // Archive
-            isSuccessful = this.zipper.CompressFolder(folderPath.TempDirectory, folderPath.ArchiveDirectory);
+            isSuccessful = ArchiveFolder(this.zipper, folderPath.TempDirectory, folderPath.ArchiveDirectory);
             DisplayZipperCompressOutcomeMessage(isSuccessful);
 
             // Remove temp
@@ -106,8 +99,15 @@
             catch (Exception caught)
             {
                 inputTextBlock.Text = caught.Message;
-                throw;
+                return new FolderPath(this.DefaultPath);
             }
+        }
+
+        private bool ArchiveFolder(IFolderZipper zipper, string folderToCompress, string archiveLocation)
+        {
+            var result = zipper.CompressFolder(folderToCompress, archiveLocation);
+
+            return result;
         }
 
         private void DisplayZipperCompressOutcomeMessage(bool isSuccessful)
