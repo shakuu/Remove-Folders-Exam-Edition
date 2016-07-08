@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.25123.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StartUp", "StartUp\StartUp.csproj", "{42EA78DC-8028-4417-84AB-E1A3BE34A437}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RemoveFolders.Client", "StartUp\RemoveFolders.Client.csproj", "{42EA78DC-8028-4417-84AB-E1A3BE34A437}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RemoveFiles", "RemoveFiles\RemoveFiles.csproj", "{58AD42B2-C316-46F4-9E0A-01B696DB74F7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RemoveFolders.Utilities", "RemoveFiles\RemoveFolders.Utilities.csproj", "{58AD42B2-C316-46F4-9E0A-01B696DB74F7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

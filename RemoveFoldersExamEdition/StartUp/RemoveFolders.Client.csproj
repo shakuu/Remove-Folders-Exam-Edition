@@ -7,7 +7,7 @@
     <ProjectGuid>{42EA78DC-8028-4417-84AB-E1A3BE34A437}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>StartUp</RootNamespace>
+    <RootNamespace>RemoveFolders.Client</RootNamespace>
     <AssemblyName>Remove Folders Exam Edition</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -103,9 +103,9 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\RemoveFiles\RemoveFiles.csproj">
+    <ProjectReference Include="..\RemoveFiles\RemoveFolders.Utilities.csproj">
       <Project>{58ad42b2-c316-46f4-9e0a-01b696db74f7}</Project>
-      <Name>RemoveFiles</Name>
+      <Name>RemoveFolders.Utilities</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

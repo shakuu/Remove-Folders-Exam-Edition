@@ -1,18 +1,19 @@
-﻿
-namespace RemoveFiles
+﻿namespace RemoveFolders.Utilities
 {
     using System.Collections.Generic;
+    
+    using Contracts;
 
-    public class FilesToRemoveListProvider : IListToRemove
+    public class ToRemoveListProvider : IListToRemove
     {
         private HashSet<string> extensions;
 
-        public FilesToRemoveListProvider()
+        public ToRemoveListProvider()
         {
-            this.BuildDefaultList();
+            this.BuildDefaultExtensionsList();
         }
 
-        public ICollection<string> ListOfExtensions
+        public ICollection<string> ListToRemove
         {
             get
             {
@@ -20,7 +21,7 @@ namespace RemoveFiles
             }
         }
 
-        private void BuildDefaultList()
+        private void BuildDefaultExtensionsList()
         {
             this.extensions = new HashSet<string>()
             {

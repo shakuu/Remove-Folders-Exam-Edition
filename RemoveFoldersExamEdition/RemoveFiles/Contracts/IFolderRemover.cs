@@ -1,5 +1,4 @@
-﻿
-namespace RemoveFiles.Contracts
+﻿namespace RemoveFolders.Utilities.Contracts
 {
     using System.Collections.Generic;
 

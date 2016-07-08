@@ -1,4 +1,4 @@
-﻿namespace RemoveFiles.Contracts
+﻿namespace RemoveFolders.Utilities.Contracts
 {
     public interface IFolderPath
     {

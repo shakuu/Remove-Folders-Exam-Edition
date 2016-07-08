@@ -1,5 +1,4 @@
-﻿
-namespace RemoveFiles
+﻿namespace RemoveFolders.Utilities
 {
     using System;
     using System.Collections.Generic;

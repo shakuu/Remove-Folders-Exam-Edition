@@ -1,11 +1,10 @@
-﻿
-namespace RemoveFiles
+﻿namespace RemoveFolders.Utilities
 {
     using System;
     using System.IO;
     using System.IO.Compression;
 
-    using RemoveFiles.Contracts;
+    using Contracts;
     
     public class FolderZipper : IFolderZipper
     {

@@ -1,4 +1,4 @@
-﻿namespace StartUp
+﻿namespace RemoveFolders.Client
 {
     using System;
     using System.Collections.Generic;
@@ -8,8 +8,8 @@
     using System.Windows.Controls;
     using WinForms = System.Windows.Forms;
 
-    using RemoveFiles;
-    using RemoveFiles.Contracts;
+    using Utilities;
+    using Utilities.Contracts;
 
     /// <summary>
     /// Interaction logic for MainWindow.xaml
@@ -92,11 +92,11 @@
             this.Delete();
 
             // Delete files .suo .txt etc
-            var filesToRemove = new FilesToRemoveListProvider();
+            var filesToRemove = new ToRemoveListProvider();
 
             var removedFiles = this.fileRemover.RemoveFilesWithExtension(
                  folderPath.TempDirectory,
-                 filesToRemove.ListOfExtensions);
+                 filesToRemove.ListToRemove);
 
             this.DisplayOnTextBlock(DisplayDeletedFolders, removedFiles,
                  "Operation: Delete unnecessary files - complete");
