@@ -19,7 +19,7 @@
         private const string InitialDefaultPath = "D:\\GitHub";
 
         private IFolderZipper zipper;
-        private IRemover remover;
+        private IRemover folderRemover;
         private IRemover fileRemover;
         private IFolderPath folderPath;
 
@@ -33,7 +33,7 @@
 
             this.folderPath = new FolderPath(DirNameTextBox.Text);
             this.zipper = new FolderZipper();
-            this.remover = new FolderRemover();
+            this.folderRemover = new FolderRemover();
             this.fileRemover = new FileRemover();
         }
 
@@ -86,10 +86,10 @@
             this.zipper.ExtractToTempFolder(folderPath.TempDirectory, folderPath.ArchiveDirectory);
 
             // Search in temp
-            this.Search(this.remover.FindItems, folderPath.TempDirectory, new List<string>());
+            this.Search(this.folderRemover.FindItems, folderPath.TempDirectory, new List<string>());
 
             // Delete
-            this.Delete(this.remover.RemoveItems, this.remover.ItemsFound);
+            this.Delete(this.folderRemover.RemoveItems, this.folderRemover.ItemsFound);
 
             // Delete files .suo .txt etc
             var filesToRemove = new ToRemoveListProvider();
