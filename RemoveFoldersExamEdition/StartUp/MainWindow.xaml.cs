@@ -53,6 +53,7 @@
             if (userInput != WinForms.DialogResult.Cancel)
             {
                 DirNameTextBox.Text = dialog.SelectedPath;
+                this.DefaultPath = DirNameTextBox.Text;
             }
             else
             {
@@ -104,7 +105,7 @@
             try
             {
                 result = new FolderPath(inputTextBlock.Text);
-                this.DefaultPath = folderPath.Directory;
+                this.DefaultPath = result.Directory;
                 return result;
             }
             catch (Exception caught)
@@ -155,10 +156,7 @@
 
         private void Delete(Func<IEnumerable<string>, ICollection<string>> deleteMethod, IEnumerable<string> inputParams)
         {
-            var userInput = WinForms.MessageBox
-                .Show(string.Format("Are you sure sure you want to delete all unnecessary files and folders in {0}?",
-                folderPath.Directory),
-                "Confirm deletion", MessageBoxButtons.OKCancel);
+            var userInput = WinForms.DialogResult.OK;
 
             if (userInput == WinForms.DialogResult.OK)
             {

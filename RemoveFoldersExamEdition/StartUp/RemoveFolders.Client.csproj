@@ -35,7 +35,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>zip.ico</ApplicationIcon>
+    <ApplicationIcon>file_upload.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
     <StartupObject>StartUp.App</StartupObject>
@@ -93,6 +93,7 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <Resource Include="file_upload.ico" />
     <Content Include="settings\file.settings.removefolders">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
