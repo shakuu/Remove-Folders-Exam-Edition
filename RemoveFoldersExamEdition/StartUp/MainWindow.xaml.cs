@@ -11,7 +11,9 @@
 
     using Utilities;
     using Utilities.Contracts;
-    using System.Linq;    /// <summary>
+    using System.Linq;  
+    
+    /// <summary>
                           /// Interaction logic for MainWindow.xaml
                           /// </summary>
     public partial class MainWindow : Window
