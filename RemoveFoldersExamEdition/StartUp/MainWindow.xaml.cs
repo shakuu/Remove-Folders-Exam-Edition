@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
+    using System.Diagnostics;
     using System.Windows;
     using System.Windows.Forms;
     using WinControls = System.Windows.Controls;
@@ -10,10 +11,9 @@
 
     using Utilities;
     using Utilities.Contracts;
-
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
+    using System.Linq;    /// <summary>
+                          /// Interaction logic for MainWindow.xaml
+                          /// </summary>
     public partial class MainWindow : Window
     {
         private const string InitialDefaultPath = "D:\\GitHub";
@@ -78,7 +78,7 @@
             DisplayZipperCompressOutcomeMessage(isSuccessful);
 
             // Extract to temp
-            this.zipper.ExtractToTempFolder(folderPath.TempDirectory, folderPath.ArchiveDirectory);
+            this.zipper.ExtractToFolder(folderPath.TempDirectory, folderPath.ArchiveDirectory);
 
             // Search and Destray Folders.
             var foldersToRemove = new ToRemoveListProvider(MainWindow.FolderExtentionsListFilePath);
@@ -194,6 +194,23 @@
 
         private void DirNameTextBox_TextChanged(object sender, WinControls.TextChangedEventArgs e)
         {
+        }
+
+        private void ShowInExplorerBtn_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                this.folderPath = GetCurrentFolderPath(this.DirNameTextBox);
+            }
+            catch (Exception)
+            {
+                return;
+            }
+
+            var directoryAsArray = folderPath.Directory.Split('\\');
+            var output = string.Join("\\", directoryAsArray.Take(directoryAsArray.Length - 1).ToArray());
+
+            Process.Start("explorer", output);
         }
     }
 }

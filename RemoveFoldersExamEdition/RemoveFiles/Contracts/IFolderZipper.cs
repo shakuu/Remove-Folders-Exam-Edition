@@ -6,6 +6,6 @@
         
         bool DeleteTempFolder(string tempDirectory);
 
-        bool ExtractToTempFolder(string tempDirectory, string archiveLocation);
+        bool ExtractToFolder(string tempDirectory, string archiveLocation);
     }
 }

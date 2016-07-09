@@ -25,7 +25,7 @@
             }
         }
         
-        public bool ExtractToTempFolder(string tempDirectory, string archiveLocation)
+        public bool ExtractToFolder(string tempDirectory, string archiveLocation)
         {
             if (archiveLocation == null || !File.Exists(archiveLocation))
             {

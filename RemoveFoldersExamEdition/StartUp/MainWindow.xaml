@@ -64,13 +64,23 @@
         <Button x:Name="ArchiveBtn" 
                 Content="Archive"
                 HorizontalAlignment="Left"
-                Margin="10,164,0,0"
+                Margin="10,125,0,0"
                 VerticalAlignment="Top" 
                 FontFamily="consolas"
                 FontSize="16"
                 Foreground="White"
                 Background="RoyalBlue"
                 Width="125" Height="30" Click="ArchiveBtn_Click"/>
+        <Button x:Name="ShowInExplorerBtn" 
+                Content="Show Archive"
+                HorizontalAlignment="Left"
+                Margin="10,165,0,0"
+                VerticalAlignment="Top" 
+                FontFamily="consolas"
+                FontSize="16"
+                Foreground="White"
+                Background="RoyalBlue"
+                Width="125" Height="30" Click="ShowInExplorerBtn_Click"/>
        
 
     </Grid>
