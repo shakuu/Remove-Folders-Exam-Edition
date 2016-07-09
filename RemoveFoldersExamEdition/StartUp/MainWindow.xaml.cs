@@ -11,11 +11,11 @@
 
     using Utilities;
     using Utilities.Contracts;
-    using System.Linq;  
-    
+    using System.Linq;
+
     /// <summary>
-                          /// Interaction logic for MainWindow.xaml
-                          /// </summary>
+    /// Interaction logic for MainWindow.xaml
+    /// </summary>
     public partial class MainWindow : Window
     {
         private const string InitialDefaultPath = "D:\\GitHub";
@@ -27,6 +27,9 @@
         private IRemover folderRemover;
         private IRemover fileRemover;
         private IFolderPath folderPath;
+
+        private IListToRemove foldersToRemove;
+        private IListToRemove filesToRemove;
 
         public MainWindow()
         {
@@ -40,6 +43,9 @@
             this.zipper = new FolderZipper();
             this.folderRemover = new FolderRemover();
             this.fileRemover = new FileRemover();
+
+            this.foldersToRemove = new ToRemoveListProvider(MainWindow.FolderExtentionsListFilePath);
+            this.filesToRemove = new ToRemoveListProvider(MainWindow.FileExtentionsListFilePath);
         }
 
         public string DefaultPath { get; private set; }
@@ -83,13 +89,11 @@
             this.zipper.ExtractToFolder(folderPath.TempDirectory, folderPath.ArchiveDirectory);
 
             // Search and Destray Folders.
-            var foldersToRemove = new ToRemoveListProvider(MainWindow.FolderExtentionsListFilePath);
-            this.Search(this.folderRemover.FindItems, folderPath.TempDirectory, foldersToRemove.ListToRemove);
+            this.Search(this.folderRemover.FindItems, folderPath.TempDirectory, this.foldersToRemove.ListToRemove);
             this.Delete(this.folderRemover.RemoveItems, this.folderRemover.ItemsFound);
 
             // Search and Destroy Files.
-            var filesToRemove = new ToRemoveListProvider(MainWindow.FileExtentionsListFilePath);
-            Search(this.fileRemover.FindItems, folderPath.TempDirectory, filesToRemove.ListToRemove);
+            Search(this.fileRemover.FindItems, folderPath.TempDirectory, this.filesToRemove.ListToRemove);
             Delete(this.fileRemover.RemoveItems, this.fileRemover.ItemsFound);
 
             // Archive
