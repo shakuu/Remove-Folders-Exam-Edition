@@ -37,7 +37,7 @@
             WindowStartupLocation = WindowStartupLocation.CenterScreen;
 
             this.DefaultPath = InitialDefaultPath;
-            DirNameTextBox.Text = this.DefaultPath;
+            this.DirNameTextBox.Text = this.DefaultPath;
 
             this.folderPath = new FolderPath(DirNameTextBox.Text);
             this.zipper = new FolderZipper();
@@ -71,8 +71,6 @@
 
         private void ArchiveBtn_Click(object sender, RoutedEventArgs e)
         {
-            this.DisplayDeletedFolders.Text = string.Empty;
-
             try
             {
                 this.folderPath = GetCurrentFolderPath(this.DirNameTextBox);
@@ -82,23 +80,23 @@
                 return;
             }
 
-            var isSuccessful = this.zipper.CompressFolder(folderPath.Directory, folderPath.ArchiveDirectory);
-            DisplayZipperCompressOutcomeMessage(isSuccessful);
+            var isSuccessful = this.zipper.CompressFolder(this.folderPath.Directory, this.folderPath.ArchiveDirectory);
+            this.DisplayZipperCompressOutcomeMessage(isSuccessful);
 
             // Extract to temp
             this.zipper.ExtractToFolder(folderPath.TempDirectory, folderPath.ArchiveDirectory);
 
             // Search and Destray Folders.
-            this.Search(this.folderRemover.FindItems, folderPath.TempDirectory, this.foldersToRemove.ListToRemove);
+            this.Search(this.folderRemover.FindItems, this.folderPath.TempDirectory, this.foldersToRemove.ListToRemove);
             this.Delete(this.folderRemover.RemoveItems, this.folderRemover.ItemsFound);
 
             // Search and Destroy Files.
-            Search(this.fileRemover.FindItems, folderPath.TempDirectory, this.filesToRemove.ListToRemove);
-            Delete(this.fileRemover.RemoveItems, this.fileRemover.ItemsFound);
+            this.Search(this.fileRemover.FindItems, this.folderPath.TempDirectory, this.filesToRemove.ListToRemove);
+            this.Delete(this.fileRemover.RemoveItems, this.fileRemover.ItemsFound);
 
             // Archive
             isSuccessful = this.zipper.CompressFolder(folderPath.TempDirectory, folderPath.ArchiveDirectory);
-            DisplayZipperCompressOutcomeMessage(isSuccessful);
+            this.DisplayZipperCompressOutcomeMessage(isSuccessful);
 
             // Remove temp
             this.zipper.DeleteTempFolder(folderPath.TempDirectory);
@@ -162,39 +160,29 @@
 
         private void Delete(Func<IEnumerable<string>, ICollection<string>> deleteMethod, IEnumerable<string> inputParams)
         {
-            var userInput = WinForms.DialogResult.OK;
+            ICollection<string> result = new Collection<string>();
 
-            if (userInput == WinForms.DialogResult.OK)
+            try
             {
-                ICollection<string> result = new Collection<string>();
-
-                try
-                {
-                    result = deleteMethod.Invoke(inputParams);
-                }
-                catch (Exception)
-                {
-                    DisplayDeletedFolders.Text += Environment.NewLine +
-                        "Unable to delete all files/ folders";
-                }
+                result = deleteMethod.Invoke(inputParams);
+            }
+            catch (Exception)
+            {
+                DisplayDeletedFolders.Text += Environment.NewLine +
+                    "Unable to delete all files/ folders";
+            }
 
 
-                if (result.Count == 0)
-                {
-                    DisplayDeletedFolders.Text += Environment.NewLine +
-                        "Operation: Delete - complete.";
-                }
-                else
-                {
-                    DisplayDeletedFolders.Text += Environment.NewLine +
-                        "Unable to delete: " + Environment.NewLine +
-                        string.Join(Environment.NewLine, result);
-                }
+            if (result.Count == 0)
+            {
+                DisplayDeletedFolders.Text += Environment.NewLine +
+                    "Operation: Delete - complete.";
             }
             else
             {
-                DirNameTextBox.Text += Environment.NewLine +
-                    "Operation canceled.";
+                DisplayDeletedFolders.Text += Environment.NewLine +
+                    "Unable to delete: " + Environment.NewLine +
+                    string.Join(Environment.NewLine, result);
             }
         }
 
